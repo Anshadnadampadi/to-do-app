@@ -154,7 +154,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
   const completedRoutinesCount = routines.filter(r => r.isCompleted).length;
 
   return (
-    <div className="w-full max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+    <div className="w-full max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 overflow-x-hidden">
       {/* ===================================================================
           1. TOP DATE & MONTH CARD
           =================================================================== */}

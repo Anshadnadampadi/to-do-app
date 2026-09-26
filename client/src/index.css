@@ -54,7 +54,7 @@
   box-sizing: border-box;
 }
 
-body {
+body { overflow-x: hidden;
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: var(--font-main);
@@ -68,94 +68,46 @@ input, button, select, textarea {
   font-family: inherit;
 }
 
-/* Scrollbar styles */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-app);
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: var(--radius-pill);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-blue);
+/* Ensure images and media scale responsively */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Light Card with Apple-Style Soft Shadow */
-.light-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.light-card:hover {
-  box-shadow: var(--shadow-elevated);
-  border-color: #CBD5E1;
-}
-
-/* Solid Electric Blue Pill Primary Button - High Contrast Crisp White Text */
-.btn-primary-blue {
-  background-color: var(--primary-blue);
-  color: #FFFFFF !important;
-  border: none;
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  border-radius: var(--radius-pill);
-  padding: 10px 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(24, 103, 255, 0.35);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.btn-primary-blue svg {
-  color: #FFFFFF !important;
-  stroke: #FFFFFF !important;
-}
-.btn-primary-blue:hover {
-  background-color: var(--primary-blue-hover);
-  color: #FFFFFF !important;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(24, 103, 255, 0.45);
-}
-.btn-primary-blue:active {
-  transform: translateY(0);
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  /* Phone mockup should fit container */
+  .light-phone-mockup {
+    width: 100% !important;
+    height: auto !important;
+  }
+  /* Reduce padding on ribbon bar for small screens */
+  .module-nav-ribbon-bar {
+    padding: 4px !important;
+    gap: 4px !important;
+  }
+  /* Adjust calendar pill font sizes */
+  .calendar-day-btn .date-num {
+    font-size: 14px;
+  }
+  .calendar-day-btn .date-name {
+    font-size: 9px;
+  }
+  /* Reduce button padding for better fit */
+  .btn-primary-blue {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+  .segmented-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  /* Ensure horizontal overflow hidden on body for mobile */
+  body {
+    overflow-x: hidden;
+  }
 }
 
-/* Calendar Date Pills - High Contrast Active State */
-.calendar-day-btn {
-  flex: 1;
-  min-width: 58px;
-  padding: 10px 8px;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  color: #1E293B;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
 .calendar-day-btn:hover {
   background-color: #F8FAFC;
   border-color: #CBD5E1;
