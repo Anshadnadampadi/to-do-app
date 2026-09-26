@@ -1324,7 +1324,6 @@ input, button, select, textarea {
 
 /* Responsive Media Queries */
 @media (max-width: 639px) {
-  .sm\:hidden { display: none !important; }
   .navbar-level-badge { display: none !important; }
   .brand-tag-pill, .brand-subtitle-text { display: none !important; }
 }
@@ -1348,9 +1347,7 @@ input, button, select, textarea {
 }
 
 @media (max-width: 767px) {
-  .md\:hidden { display: none !important; }
   .navbar-search-col { display: none !important; }
-  .module-nav-ribbon-wrapper { display: none !important; }
   .mobile-search-btn { display: flex !important; }
 }
 
@@ -1370,12 +1367,10 @@ input, button, select, textarea {
   .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .navbar-search-col { display: flex !important; }
-  .module-nav-ribbon-wrapper { display: block !important; }
   .mobile-search-btn { display: none !important; }
 }
 
 @media (max-width: 1023px) {
-  .lg\:hidden { display: none !important; }
   .navbar-reflection-btn, .navbar-reset-btn { display: none !important; }
   .mobile-section-hidden { display: none !important; }
   .mobile-section-active { display: flex !important; }
@@ -1673,6 +1668,22 @@ input, button, select, textarea {
   padding: 16px;
   z-index: 1000;
   box-sizing: border-box;
+}
+
+@media (max-width: 639px) {
+  .notification-popover {
+    position: fixed !important;
+    top: 60px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(85vh - 70px) !important;
+    overflow-y: auto !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28) !important;
+    border-radius: 20px !important;
+    z-index: 9999 !important;
+  }
 }
 
 .notification-popover-header {

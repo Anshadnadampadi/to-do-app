@@ -167,18 +167,43 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
     }
   };
 
-  // Filter tasks based on search & tab
+  // Filter tasks safely based on search & tab (handles undefined fields without crashing)
   const filteredTasks = tasks.filter(task => {
     if (activeFilterTab === 'in-progress' && task.statusBadge !== 'In Progress') return false;
     if (activeFilterTab === 'pending' && task.statusBadge !== 'Pending') return false;
     if (activeFilterTab === 'completed' && task.status !== 'completed') return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return task.title.toLowerCase().includes(q) ||
-             (task.description && task.description.toLowerCase().includes(q)) ||
-             task.category.toLowerCase().includes(q);
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const titleMatch = Boolean(task.title && task.title.toLowerCase().includes(q));
+      const descMatch = Boolean(task.description && task.description.toLowerCase().includes(q));
+      const catMatch = Boolean(task.category && task.category.toLowerCase().includes(q));
+      if (!titleMatch && !descMatch && !catMatch) return false;
     }
     return true;
+  });
+
+  // Filter routines based on search query
+  const filteredRoutines = routines.filter(r => {
+    if (!searchQuery || !searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return Boolean(r.title && r.title.toLowerCase().includes(q));
+  });
+
+  // Filter habits based on search query
+  const filteredHabits = habits.filter(h => {
+    if (!searchQuery || !searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return Boolean(h.name && h.name.toLowerCase().includes(q));
+  });
+
+  // Filter events based on search query
+  const filteredEvents = INITIAL_EVENT_LOGS.filter(e => {
+    if (!searchQuery || !searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return Boolean(
+      (e.title && e.title.toLowerCase().includes(q)) ||
+      (e.description && e.description.toLowerCase().includes(q))
+    );
   });
 
   const completedTasksCount = tasks.filter(t => t.status === 'completed').length;
@@ -806,7 +831,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
 
             {/* Checklist Items */}
             <div className="mt-3 flex flex-col gap-2 max-h-[380px] overflow-y-auto pr-1">
-              {routines.map((item) => (
+              {filteredRoutines.map((item) => (
                 <div
                   key={item.id}
                   onClick={() => toggleRoutine(item.id)}
@@ -894,7 +919,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
-              {INITIAL_EVENT_LOGS.map((event) => (
+              {filteredEvents.map((event) => (
                 <div
                   key={event.id}
                   className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-slate-300 shadow-[0_2px_8px_rgba(15,23,42,0.02)] flex flex-col gap-2.5 transition-all min-w-0"
@@ -965,7 +990,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
             </div>
 
             <div className="mt-3 flex flex-col gap-2">
-              {habits.map((habit) => (
+              {filteredHabits.map((habit) => (
                 <div
                   key={habit.id}
                   onClick={() => toggleHabitToday(habit.id)}

@@ -418,9 +418,9 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
         </div>
       </div>
 
-      {/* Expandable Mobile Search Drawer (Point 3) */}
+      {/* Expandable Mobile Search Drawer */}
       {isMobileSearchOpen && (
-        <div className="md:hidden w-full px-4 pb-3 pt-1 border-t border-slate-100 bg-white/95 animate-in slide-in-from-top-2 duration-150">
+        <div className="mobile-search-drawer w-full px-3.5 pb-3 pt-1.5 border-t border-slate-200/90 bg-white shadow-xs">
           <div className="searchbar-box">
             <div className="searchbar-icon">
               <Search size={15} />

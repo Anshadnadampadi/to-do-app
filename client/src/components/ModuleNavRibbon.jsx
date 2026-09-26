@@ -75,7 +75,7 @@ export const ModuleNavRibbon = () => {
   ];
 
   return (
-    <div className="module-nav-ribbon-wrapper hidden md:block">
+    <div className="module-nav-ribbon-wrapper">
       <div className="module-nav-ribbon-bar">
         {navItems.map((item) => {
           const isActive = activeModule === item.id;

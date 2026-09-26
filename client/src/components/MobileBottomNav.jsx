@@ -1,49 +1,48 @@
 import React from 'react';
-import { Home, CheckSquare, Flame, Calendar, User } from 'lucide-react';
+import { CheckSquare, Flame, Target, Code2, FolderArchive } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const MobileBottomNav = ({ activeSection, onSelectSection }) => {
-  const { tasks, routines, habits } = useApp();
+  const { tasks, habits, goals, dsa, uploads } = useApp();
 
   const completedTasks = tasks.filter(t => t.status === 'completed').length;
-  const completedRoutines = routines.filter(r => r.isCompleted).length;
 
   const navItems = [
     {
-      id: 'home',
-      label: 'Home',
-      icon: Home,
-      badge: tasks.length > 0 ? `${completedTasks}/${tasks.length}` : null
-    },
-    {
-      id: 'routines',
+      id: 'tasks',
       label: 'Tasks',
       icon: CheckSquare,
-      badge: routines.length > 0 ? `${completedRoutines}/${routines.length}` : null
+      badge: tasks.length > 0 ? `${completedTasks}/${tasks.length}` : null
     },
     {
       id: 'habits',
       label: 'Habits',
       icon: Flame,
-      badge: habits.length > 0 ? habits.length : null
+      badge: habits.length > 0 ? `${habits.length}` : null
     },
     {
-      id: 'events',
-      label: 'Calendar',
-      icon: Calendar,
-      badge: null
+      id: 'goals-projects',
+      label: 'Goals',
+      icon: Target,
+      badge: goals.length > 0 ? `${goals.length}` : null
+    },
+    {
+      id: 'dsa-ai',
+      label: 'DSA & AI',
+      icon: Code2,
+      badge: dsa?.totalSolved ? `${dsa.totalSolved}` : null
     },
     {
       id: 'vault',
-      label: 'Arc Vault',
-      icon: User,
-      badge: null
+      label: 'Vault',
+      icon: FolderArchive,
+      badge: uploads.length > 0 ? `${uploads.length}` : null
     }
   ];
 
   return (
     <nav className="mobile-bottom-nav-bar md:hidden">
-      <div className="flex items-center justify-around w-full max-w-md mx-auto px-2">
+      <div className="flex items-center justify-around w-full max-w-md mx-auto px-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;

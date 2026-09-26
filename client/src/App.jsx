@@ -114,17 +114,12 @@ const MainApp = () => {
         defaultTaskTitle={focusTaskTitle}
       />
 
-      {/* Mobile-Only iOS Bottom Navigation Bar (Point 5) */}
+      {/* Mobile-Only iOS Bottom Navigation Bar */}
       <MobileBottomNav
-        activeSection={activeModule === 'tasks' ? mobileSection : activeModule}
+        activeSection={activeModule}
         onSelectSection={(id) => {
-          if (id === 'vault') {
-            setActiveModule('vault');
-            setMobileSection('vault');
-          } else {
-            setActiveModule('tasks');
-            setMobileSection(id);
-          }
+          setActiveModule(id);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
     </div>
