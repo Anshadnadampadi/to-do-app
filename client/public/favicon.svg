@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Dark Squircle Base -->
+  <rect width="64" height="64" rx="18" fill="#090A0F"/>
+  <rect x="1" y="1" width="62" height="62" rx="17" stroke="#1867FF" stroke-width="2" stroke-opacity="0.6"/>
+  <!-- Winter Arc Emblem -->
+  <g transform="translate(10.3, 23.7) scale(0.215)">
+    <path d="M0 76L133 0V24L202 0V70L182 77V53L114 77V50L0 76Z" fill="#FFFFFF"/>
+  </g>
+</svg>
