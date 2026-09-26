@@ -1313,31 +1313,94 @@ input, button, select, textarea {
 .transition-all { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
 .hover\:scale-105:hover { transform: scale(1.05); }
 
+/* Base Display Utilities */
+.hidden { display: none !important; }
+.block { display: block !important; }
+.inline { display: inline !important; }
+.inline-block { display: inline-block !important; }
+.flex { display: flex !important; }
+.inline-flex { display: inline-flex !important; }
+.grid { display: grid !important; }
+
 /* Responsive Media Queries */
+@media (max-width: 639px) {
+  .sm\:hidden { display: none !important; }
+  .navbar-level-badge { display: none !important; }
+  .brand-tag-pill, .brand-subtitle-text { display: none !important; }
+}
+
 @media (min-width: 640px) {
   .sm\:flex-row { flex-direction: row; }
   .sm\:items-center { align-items: center; }
   .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sm\:block { display: block !important; }
+  .sm\:inline { display: inline !important; }
+  .sm\:inline-flex { display: inline-flex !important; }
+  .sm\:flex { display: flex !important; }
+  .sm\:grid { display: grid !important; }
+  .sm\:hidden { display: none !important; }
+  .hidden.sm\:flex { display: flex !important; }
+  .hidden.sm\:inline { display: inline !important; }
+  .hidden.sm\:inline-flex { display: inline-flex !important; }
+  .hidden.sm\:block { display: block !important; }
+  .navbar-level-badge { display: flex !important; }
+}
+
+@media (max-width: 767px) {
+  .md\:hidden { display: none !important; }
+  .navbar-search-col { display: none !important; }
+  .module-nav-ribbon-wrapper { display: none !important; }
+  .mobile-search-btn { display: flex !important; }
 }
 
 @media (min-width: 768px) {
-  .md\:flex { display: flex; }
-  .md\:hidden { display: none; }
+  .md\:flex { display: flex !important; }
+  .md\:block { display: block !important; }
+  .md\:inline { display: inline !important; }
+  .md\:inline-flex { display: inline-flex !important; }
+  .md\:grid { display: grid !important; }
+  .md\:hidden { display: none !important; }
+  .hidden.md\:block { display: block !important; }
+  .hidden.md\:flex { display: flex !important; }
+  .hidden.md\:inline { display: inline !important; }
+  .hidden.md\:inline-flex { display: inline-flex !important; }
   .md\:flex-row { flex-direction: row; }
   .md\:items-center { align-items: center; }
   .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .navbar-search-col { display: flex !important; }
+  .module-nav-ribbon-wrapper { display: block !important; }
+  .mobile-search-btn { display: none !important; }
+}
+
+@media (max-width: 1023px) {
+  .lg\:hidden { display: none !important; }
+  .navbar-reflection-btn, .navbar-reset-btn { display: none !important; }
+  .mobile-section-hidden { display: none !important; }
+  .mobile-section-active { display: flex !important; }
 }
 
 @media (min-width: 1024px) {
-  .lg\:flex { display: flex; }
-  .lg\:hidden { display: none; }
+  .lg\:flex { display: flex !important; }
+  .lg\:block { display: block !important; }
+  .lg\:inline { display: inline !important; }
+  .lg\:inline-flex { display: inline-flex !important; }
+  .lg\:grid { display: grid !important; }
+  .lg\:hidden { display: none !important; }
+  .hidden.lg\:block { display: block !important; }
+  .hidden.lg\:flex { display: flex !important; }
+  .hidden.lg\:inline { display: inline !important; }
+  .hidden.lg\:inline-flex { display: inline-flex !important; }
   .lg\:col-span-8 { grid-column: span 8 / span 8; }
   .lg\:col-span-4 { grid-column: span 4 / span 4; }
   .lg\:col-span-5 { grid-column: span 5 / span 5; }
   .lg\:col-span-7 { grid-column: span 7 / span 7; }
   .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .navbar-reflection-btn { display: inline-flex !important; }
+  .navbar-reset-btn { display: flex !important; }
+  .mobile-section-hidden { display: flex !important; }
+  .mobile-section-active { display: flex !important; }
 }
 
 /* ===================================================================
@@ -1945,13 +2008,13 @@ input, button, select, textarea {
   right: 0;
   width: 100%;
   z-index: 45;
-  background-color: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.05);
-  padding-top: 6px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 8px) + 6px);
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid #E2E8F0;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+  padding-top: 8px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 8px) + 8px);
   box-sizing: border-box;
 }
 
@@ -1960,13 +2023,13 @@ input, button, select, textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 4px 6px;
+  gap: 3px;
+  padding: 4px 8px;
   background: transparent;
   border: none;
   cursor: pointer;
   outline: none;
-  min-width: 48px;
+  min-width: 52px;
   position: relative;
   transition: all 0.15s ease;
   user-select: none;
@@ -1979,15 +2042,15 @@ input, button, select, textarea {
 
 .mobile-nav-badge {
   position: absolute;
-  top: -4px;
-  right: -8px;
+  top: -5px;
+  right: -10px;
   min-width: 16px;
-  height: 16px;
+  height: 15px;
   padding: 0 4px;
   border-radius: 9999px;
   background-color: #1867FF;
   color: #FFFFFF;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -2003,10 +2066,10 @@ input, button, select, textarea {
   overflow: hidden;
 }
 
-/* Ensure padding on mobile main content so bottom nav does not overlap */
+/* Ensure ample padding on mobile main content so cards scroll completely clear of bottom nav */
 @media (max-width: 767px) {
   main {
-    padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 84px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 120px) !important;
   }
 }
 

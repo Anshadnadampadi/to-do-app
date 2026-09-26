@@ -207,7 +207,7 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
           {/* Mobile Search Toggle Icon (Point 3) */}
           <button
             onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-            className={`w-9 h-9 rounded-full flex md:hidden items-center justify-center transition-all ${
+            className={`mobile-search-btn w-9 h-9 rounded-full items-center justify-center transition-all ${
               isMobileSearchOpen || searchQuery
                 ? 'bg-blue-50 text-[#1867FF] border border-blue-200'
                 : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
@@ -215,13 +215,13 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
             title="Toggle Search"
             type="button"
           >
-            <Search size={17} />
+            <Search size={16} />
           </button>
 
-          {/* Level & XP Gamification Badge (Shown on tablet/desktop) */}
+          {/* Level & XP Gamification Badge (Desktop/Tablet only) */}
           <button
             onClick={() => setIsXpModalOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all shadow-xs cursor-pointer group"
+            className="navbar-level-badge items-center gap-2 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all shadow-xs cursor-pointer group"
             title="View XP Level & Rank Progress"
             type="button"
           >
@@ -398,7 +398,7 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
           {/* Daily Reflection Journal Button (Desktop only) */}
           <button
             onClick={onOpenJournalModal}
-            className="btn-secondary-white text-xs font-bold px-3.5 py-2 hidden lg:inline-flex shrink-0"
+            className="navbar-reflection-btn btn-secondary-white text-xs font-bold px-3.5 py-2 shrink-0"
             title="Open Daily Reflection Journal"
             type="button"
           >
@@ -409,7 +409,7 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
           {/* Reset Demo Button (Desktop only) */}
           <button
             onClick={resetAllData}
-            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 hidden lg:flex items-center justify-center transition-colors shrink-0"
+            className="navbar-reset-btn w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 items-center justify-center transition-colors shrink-0"
             title="Reset sample data"
             type="button"
           >

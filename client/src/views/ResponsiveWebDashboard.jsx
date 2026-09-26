@@ -338,7 +338,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
           Visible on Mobile Home and Top of Desktop
           =================================================================== */}
       <section className={`w-full min-w-0 rounded-3xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden transition-all duration-300 ${
-        mobileSection !== 'home' ? 'hidden lg:block' : 'block'
+        mobileSection !== 'home' ? 'mobile-section-hidden' : 'mobile-section-active'
       }`} style={{
         background: 'linear-gradient(135deg, #090E1A 0%, #111B33 60%, #0F275C 100%)',
         border: '1px solid rgba(255, 255, 255, 0.12)'
@@ -519,7 +519,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
             COLUMN 1: TODAY'S TASKS TIMELINE (7 COLS ON DESKTOP)
             =================================================================== */}
         <div className={`lg:col-span-7 flex flex-col gap-5 min-w-0 max-w-full ${
-          mobileSection !== 'home' ? 'hidden lg:flex' : 'flex'
+          mobileSection !== 'home' ? 'mobile-section-hidden' : 'mobile-section-active'
         }`}>
           <div className="p-4 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(24,39,75,0.04)] flex flex-col min-w-0">
             {/* Header: Title & Filter Tabs */}
@@ -741,7 +741,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
               CARD 1: ROUTINE TASK BOX
               =================================================================== */}
           <div className={`p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.03)] flex flex-col min-w-0 ${
-            mobileSection !== 'routines' ? 'hidden lg:flex' : 'flex'
+            mobileSection !== 'routines' ? 'mobile-section-hidden' : 'mobile-section-active'
           }`}>
             {/* Segmented Switcher (Add Routine | Routine Box) */}
             <div className="w-full flex items-center justify-center pb-4 border-b border-slate-100">
@@ -877,7 +877,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
               CARD 2: SCHEDULED EVENTS & TRIPS
               =================================================================== */}
           <div className={`p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.03)] flex flex-col min-w-0 ${
-            mobileSection !== 'events' ? 'hidden lg:flex' : 'flex'
+            mobileSection !== 'events' ? 'mobile-section-hidden' : 'mobile-section-active'
           }`}>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
@@ -946,7 +946,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
               CARD 3: WINTER ARC HABITS & STREAK TRACKER
               =================================================================== */}
           <div className={`p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.03)] flex flex-col min-w-0 ${
-            mobileSection !== 'habits' ? 'hidden lg:flex' : 'flex'
+            mobileSection !== 'habits' ? 'mobile-section-hidden' : 'mobile-section-active'
           }`}>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
