@@ -14,10 +14,15 @@ import { JournalModal } from './components/JournalModal';
 import { AuthModal } from './components/AuthModal';
 import { XpModal } from './components/XpModal';
 import { NotificationToast } from './components/NotificationToast';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { FocusSessionModal } from './components/FocusSessionModal';
 
 const MainApp = () => {
   const {
     activeModule,
+    setActiveModule,
+    mobileSection,
+    setMobileSection,
     isTaskModalOpen,
     setIsTaskModalOpen,
     isJournalModalOpen,
@@ -26,6 +31,9 @@ const MainApp = () => {
     setIsAuthModalOpen,
     isXpModalOpen,
     setIsXpModalOpen,
+    isFocusModalOpen,
+    setIsFocusModalOpen,
+    focusTaskTitle,
     notificationToast,
     setNotificationToast
   } = useApp();
@@ -99,6 +107,25 @@ const MainApp = () => {
       <XpModal
         isOpen={isXpModalOpen}
         onClose={() => setIsXpModalOpen(false)}
+      />
+      <FocusSessionModal
+        isOpen={isFocusModalOpen}
+        onClose={() => setIsFocusModalOpen(false)}
+        defaultTaskTitle={focusTaskTitle}
+      />
+
+      {/* Mobile-Only iOS Bottom Navigation Bar (Point 5) */}
+      <MobileBottomNav
+        activeSection={activeModule === 'tasks' ? mobileSection : activeModule}
+        onSelectSection={(id) => {
+          if (id === 'vault') {
+            setActiveModule('vault');
+            setMobileSection('vault');
+          } else {
+            setActiveModule('tasks');
+            setMobileSection(id);
+          }
+        }}
       />
     </div>
   );

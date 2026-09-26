@@ -130,6 +130,9 @@ export const AppProvider = ({ children }) => {
   const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isXpModalOpen, setIsXpModalOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState('home');
+  const [isFocusModalOpen, setIsFocusModalOpen] = useState(false);
+  const [focusTaskTitle, setFocusTaskTitle] = useState('');
   const [notificationToast, setNotificationToast] = useState(null);
   const [notificationsHistory, setNotificationsHistory] = useState(() => [
     {
@@ -925,6 +928,16 @@ export const AppProvider = ({ children }) => {
         setIsAuthModalOpen,
         isXpModalOpen,
         setIsXpModalOpen,
+        mobileSection,
+        setMobileSection,
+        isFocusModalOpen,
+        setIsFocusModalOpen,
+        focusTaskTitle,
+        setFocusTaskTitle,
+        startFocusSession: (taskTitle = '') => {
+          setFocusTaskTitle(taskTitle);
+          setIsFocusModalOpen(true);
+        },
         addXp,
         notificationToast,
         setNotificationToast,

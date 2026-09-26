@@ -48,7 +48,9 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const notificationMenuRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,6 +73,13 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
     }
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isNotificationOpen]);
+
+  // Focus search input when mobile search is opened
+  useEffect(() => {
+    if (isMobileSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isMobileSearchOpen]);
 
   const toggleNotifications = () => {
     if (!isNotificationOpen && markNotificationsRead) {
@@ -138,7 +147,7 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
   return (
     <header className={`app-header-navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-layout">
-        {/* Left Column: Brand Logo & Title (Click to return to Tasks) */}
+        {/* Left Column: Brand Logo & Title */}
         <div className="navbar-brand-col">
           <button
             onClick={() => setActiveModule('tasks')}
@@ -147,28 +156,28 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
             type="button"
           >
             <div className="brand-emblem-box">
-              <svg width="24" height="12" viewBox="0 0 204 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="22" height="11" viewBox="0 0 204 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 76L133 0V24L202 0V70L182 77V53L114 77V50L0 76Z" fill="#FFFFFF"/>
               </svg>
             </div>
             <div className="brand-text-col">
               <div className="brand-title-row">
-                <span className="brand-title-text">
+                <span className="brand-title-text font-black text-slate-900 tracking-tight text-base sm:text-lg">
                   Winter Arc
                 </span>
-                <span className="brand-tag-pill">
+                <span className="brand-tag-pill hidden sm:inline-flex">
                   PROTOCOL
                 </span>
               </div>
-              <span className="brand-subtitle-text">
+              <span className="brand-subtitle-text hidden sm:block text-[11px] text-slate-400">
                 Focus & Routine OS
               </span>
             </div>
           </button>
         </div>
 
-        {/* Center Column: Mathematically & Optically Centered Searchbar */}
-        <div className="navbar-search-col">
+        {/* Center Column: Desktop Searchbar (Hidden on mobile to save space) */}
+        <div className="navbar-search-col hidden md:block">
           <div className="searchbar-box">
             <div className="searchbar-icon">
               <Search size={16} />
@@ -193,13 +202,28 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
           </div>
         </div>
 
-        {/* Right Column: Clear Action Buttons */}
+        {/* Right Column: Clean Action Buttons (Mobile-Optimized) */}
         <div className="navbar-actions-col">
-          {/* Level & XP Gamification Badge */}
+          {/* Mobile Search Toggle Icon (Point 3) */}
+          <button
+            onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+            className={`w-9 h-9 rounded-full flex md:hidden items-center justify-center transition-all ${
+              isMobileSearchOpen || searchQuery
+                ? 'bg-blue-50 text-[#1867FF] border border-blue-200'
+                : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+            }`}
+            title="Toggle Search"
+            type="button"
+          >
+            <Search size={17} />
+          </button>
+
+          {/* Level & XP Gamification Badge (Shown on tablet/desktop) */}
           <button
             onClick={() => setIsXpModalOpen(true)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all shadow-xs cursor-pointer group"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all shadow-xs cursor-pointer group"
             title="View XP Level & Rank Progress"
+            type="button"
           >
             <div className="flex items-center gap-1">
               <Zap size={13} className="text-amber-500 fill-amber-500 group-hover:scale-110 transition-transform" />
@@ -229,7 +253,7 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
               aria-label="Notifications"
               type="button"
             >
-              <Bell size={18} strokeWidth={2.2} />
+              <Bell size={17} strokeWidth={2.2} />
               {unreadNotificationsCount > 0 && (
                 <span className="notification-count-badge">
                   {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
@@ -342,11 +366,12 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
             )}
           </div>
 
-          {/* User Account / Sign In Modal Trigger */}
+          {/* User Account / Profile Trigger */}
           <button
             onClick={() => setIsAuthModalOpen(true)}
-            className="flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-900 transition-all shrink-0 shadow-xs cursor-pointer"
+            className="flex items-center gap-1.5 pl-1 pr-2 sm:pr-3 py-1 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-900 transition-all shrink-0 shadow-xs cursor-pointer"
             title="Account & Authentication"
+            type="button"
           >
             <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#1867FF] to-[#1055E8] text-white flex items-center justify-center font-black text-[10px] overflow-hidden shrink-0">
               {user?.avatar ? (
@@ -358,36 +383,78 @@ export const CleanNavbar = ({ onOpenTaskModal, onOpenJournalModal }) => {
             <span className="hidden sm:inline font-bold text-slate-900">{user?.name || 'Sign In'}</span>
           </button>
 
-          {/* + Add Task Button */}
+          {/* + Add Task Button (Compact on mobile) */}
           <button
             onClick={onOpenTaskModal}
-            className="btn-primary-blue text-xs font-bold px-4 py-2 shrink-0"
+            className="btn-primary-blue text-xs font-bold px-3 sm:px-4 py-2 shrink-0"
             title="Add a new task"
+            type="button"
           >
-            <Plus size={16} strokeWidth={2.8} />
-            <span className="inline">New Task</span>
+            <Plus size={15} strokeWidth={2.8} />
+            <span className="hidden sm:inline">New Task</span>
+            <span className="sm:hidden">Task</span>
           </button>
 
-          {/* Daily Reflection Journal Button */}
+          {/* Daily Reflection Journal Button (Desktop only) */}
           <button
             onClick={onOpenJournalModal}
-            className="btn-secondary-white text-xs font-bold px-3.5 py-2 hidden sm:inline-flex shrink-0"
+            className="btn-secondary-white text-xs font-bold px-3.5 py-2 hidden lg:inline-flex shrink-0"
             title="Open Daily Reflection Journal"
+            type="button"
           >
             <BookOpen size={15} className="text-[#1867FF]" />
             <span>Reflection</span>
           </button>
 
-          {/* Reset Demo Button */}
+          {/* Reset Demo Button (Desktop only) */}
           <button
             onClick={resetAllData}
-            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors shrink-0"
+            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 hidden lg:flex items-center justify-center transition-colors shrink-0"
             title="Reset sample data"
+            type="button"
           >
             <RotateCcw size={15} />
           </button>
         </div>
       </div>
+
+      {/* Expandable Mobile Search Drawer (Point 3) */}
+      {isMobileSearchOpen && (
+        <div className="md:hidden w-full px-4 pb-3 pt-1 border-t border-slate-100 bg-white/95 animate-in slide-in-from-top-2 duration-150">
+          <div className="searchbar-box">
+            <div className="searchbar-icon">
+              <Search size={15} />
+            </div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search tasks, routines, or events..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="searchbar-input text-xs"
+            />
+            {searchQuery ? (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="searchbar-clear-btn"
+                title="Clear search"
+                type="button"
+              >
+                <X size={13} strokeWidth={2.6} />
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsMobileSearchOpen(false)}
+                className="searchbar-clear-btn"
+                title="Close search"
+                type="button"
+              >
+                <X size={13} strokeWidth={2.6} />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };
