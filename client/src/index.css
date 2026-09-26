@@ -720,6 +720,8 @@ input, button, select, textarea {
 .items-end { align-items: flex-end; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.justify-evenly { justify-content: space-evenly; }
 .justify-start { justify-content: flex-start; }
 .justify-end { justify-content: flex-end; }
 .flex-1 { flex: 1 1 0%; }
@@ -2030,17 +2032,18 @@ input, button, select, textarea {
 }
 
 .mobile-nav-btn {
+  flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3px;
-  padding: 4px 8px;
+  padding: 4px 2px;
   background: transparent;
   border: none;
   cursor: pointer;
   outline: none;
-  min-width: 52px;
+  min-width: 0;
   position: relative;
   transition: all 0.15s ease;
   user-select: none;

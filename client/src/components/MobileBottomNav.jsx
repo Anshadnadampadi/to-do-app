@@ -42,7 +42,7 @@ export const MobileBottomNav = ({ activeSection, onSelectSection }) => {
 
   return (
     <nav className="mobile-bottom-nav-bar md:hidden">
-      <div className="flex items-center justify-around w-full max-w-md mx-auto px-1">
+      <div className="flex items-center justify-around w-full px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
