@@ -362,7 +362,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
           2. MOTIVATION & PROGRESS HERO CARD (Points 8 & 9: Strong Visual Focus)
           Visible on Mobile Home and Top of Desktop
           =================================================================== */}
-      <section className={`w-full min-w-0 rounded-3xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden transition-all duration-300 ${
+      <section className={`w-full min-w-0 rounded-3xl p-5 sm:p-6 text-white shadow-xl relative overflow-hidden transition-all duration-300 flex flex-col ${
         mobileSection !== 'home' ? 'mobile-section-hidden' : 'mobile-section-active'
       }`} style={{
         background: 'linear-gradient(135deg, #090E1A 0%, #111B33 60%, #0F275C 100%)',
@@ -372,19 +372,101 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#1867FF]/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
         <div className="absolute bottom-0 left-1/3 w-48 h-48 bg-[#38BDF8]/15 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col gap-4">
-          {/* Top Banner Row */}
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-[10px] font-mono font-bold tracking-wider text-cyan-300 border border-white/10 uppercase">
-                Winter Arc Protocol
-              </span>
-              <span className="text-xs text-slate-300 font-medium hidden sm:inline">
-                Day {selectedDayNumber} of {months[activeMonthIndex]}
-              </span>
+        <div className="relative z-10 w-full flex flex-col lg:grid lg:grid-cols-12 lg:gap-6 lg:items-center gap-5">
+          {/* Left Column (Desktop 7 cols): Protocol, Progress Bar, & Quick Actions */}
+          <div className="w-full lg:col-span-7 flex flex-col gap-4 min-w-0">
+            {/* Top Info Row */}
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-[10px] font-mono font-bold tracking-wider text-cyan-300 border border-white/10 uppercase">
+                  Winter Arc Protocol
+                </span>
+                <span className="text-xs text-slate-300 font-medium">
+                  Day {selectedDayNumber} of {months[activeMonthIndex]}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold text-slate-300">
+                  Lv.{levelInfo.level} • {levelInfo.rank.title}
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            {/* Progress Headline & Bar */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                    <span>Today's Progress</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-[#1867FF] text-white">
+                      {completionPercent}%
+                    </span>
+                  </h2>
+                  <p className="text-xs text-slate-300 mt-0.5 font-medium">
+                    {completedTasksCount} of {tasks.length} tasks completed • Keep pushing forward
+                  </p>
+                </div>
+              </div>
+
+              {/* Glowing High-Contrast Progress Bar */}
+              <div className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden border border-white/10 p-0.5 shadow-inner">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#1867FF] via-[#38BDF8] to-[#10B981] transition-all duration-700 relative"
+                  style={{ width: `${Math.max(5, completionPercent)}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/25 animate-pulse" />
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action Chips */}
+            <div className="pt-2 border-t border-white/10 flex items-center gap-2 overflow-x-auto no-scrollbar">
+              <button
+                onClick={onOpenTaskModal}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm border border-slate-200/80"
+                type="button"
+              >
+                <Plus size={13} strokeWidth={2.8} className="text-[#1867FF]" />
+                <span>Quick Task</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setEditingRoutine(null);
+                  setIsRoutineModalOpen(true);
+                }}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm border border-slate-200/80"
+                type="button"
+              >
+                <Sparkles size={13} className="text-amber-500 fill-amber-500/20" />
+                <span>Add Routine</span>
+              </button>
+
+              <button
+                onClick={() => startFocusSession('Winter Arc Deep Work')}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm border border-slate-200/80"
+                type="button"
+              >
+                <Play size={12} className="fill-[#1867FF] text-[#1867FF]" />
+                <span>25m Focus</span>
+              </button>
+
+              <button
+                onClick={onOpenJournalModal}
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm border border-slate-200/80"
+                type="button"
+              >
+                <BookOpen size={13} className="text-emerald-600" />
+                <span>Daily Note</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column (Desktop 5 cols): Streaks & Next Priority Task Spotlight Card */}
+          <div className="w-full lg:col-span-5 flex flex-col gap-3 min-w-0 justify-center">
+            {/* Streak & XP Badges Row */}
+            <div className="flex items-center justify-start lg:justify-end gap-2 flex-wrap">
               <span className="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-bold text-amber-300 border border-white/10 flex items-center gap-1.5">
                 <Flame size={13} className="text-amber-400 fill-amber-400" />
                 <span>{maxHabitStreak} Day Streak</span>
@@ -394,144 +476,81 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
                 <span>+120 XP Today</span>
               </span>
             </div>
-          </div>
 
-          {/* Progress Bar & Motivation Headline (Point 8) */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                  <span>Today's Progress</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-[#1867FF] text-white">
-                    {completionPercent}%
+            {/* Spotlight Task Card / Celebration Banner */}
+            {nextUpTask ? (
+              <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex flex-col gap-3 shadow-lg min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+                    <Clock size={13} strokeWidth={2.5} />
+                    Next Priority Task
                   </span>
-                </h2>
-                <p className="text-xs text-slate-300 mt-0.5 font-medium">
-                  {completedTasksCount} of {tasks.length} tasks completed • Keep pushing forward
-                </p>
-              </div>
-
-              <div className="text-right">
-                <span className="text-xs font-mono font-bold text-slate-300">
-                  Lv.{levelInfo.level} • {levelInfo.rank.title}
-                </span>
-              </div>
-            </div>
-
-            {/* Glowing High-Contrast Progress Bar */}
-            <div className="w-full h-3 rounded-full bg-slate-800/80 overflow-hidden border border-white/10 p-0.5 shadow-inner">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#1867FF] via-[#38BDF8] to-[#10B981] transition-all duration-700 relative"
-                style={{ width: `${Math.max(5, completionPercent)}%` }}
-              >
-                <div className="absolute inset-0 bg-white/25 animate-pulse" />
-              </div>
-            </div>
-          </div>
-
-          {/* Next Up / Priority Task Banner (Point 9: Strong Visual Focus) */}
-          {nextUpTask ? (
-            <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-xl bg-[#1867FF] text-white flex items-center justify-center shrink-0 shadow-sm">
-                  <Clock size={16} strokeWidth={2.5} />
+                  <span className="text-[10px] font-mono text-slate-300 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                    • {nextUpTask.timeLabel || nextUpTask.time}
+                  </span>
                 </div>
-                <div className="flex flex-col min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-300">
-                      Next Priority Task
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-300">
-                      • {nextUpTask.timeLabel || nextUpTask.time}
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-white truncate">
+
+                <div className="flex items-center justify-between gap-3 min-w-0">
+                  <span className="text-sm font-bold text-white truncate min-w-0 flex-1">
                     {nextUpTask.title}
                   </span>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => startFocusSession(nextUpTask.title)}
+                      className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                      title="Start 25m Focus Session"
+                      type="button"
+                    >
+                      <Play size={12} className="fill-slate-900" />
+                      <span className="hidden sm:inline">Focus</span>
+                    </button>
+                    <button
+                      onClick={() => toggleTaskCompleted(nextUpTask.id)}
+                      className="px-3 py-1.5 rounded-xl bg-[#1867FF] hover:bg-[#1055E8] text-white text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                      title="Mark as Done"
+                      type="button"
+                    >
+                      <Check size={14} strokeWidth={3} />
+                      <span>Done</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 shrink-0">
+            ) : tasks.length > 0 ? (
+              /* Celebratory Banner when all tasks are complete */
+              <div className="p-4 rounded-2xl bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">🎉</span>
+                  <div>
+                    <h3 className="text-sm font-black text-white">All Tasks Completed Today!</h3>
+                    <p className="text-xs text-emerald-200">Winter Arc discipline maintained. +150 XP earned.</p>
+                  </div>
+                </div>
                 <button
-                  onClick={() => startFocusSession(nextUpTask.title)}
-                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-                  title="Start 25m Focus Session"
+                  onClick={onOpenJournalModal}
+                  className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
                   type="button"
                 >
-                  <Play size={12} className="fill-slate-900" />
-                  <span className="hidden sm:inline">Focus</span>
-                </button>
-                <button
-                  onClick={() => toggleTaskCompleted(nextUpTask.id)}
-                  className="px-3 py-1.5 rounded-xl bg-[#1867FF] hover:bg-[#1055E8] text-white text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-                  title="Mark as Done"
-                  type="button"
-                >
-                  <Check size={14} strokeWidth={3} />
-                  <span>Done</span>
+                  Log Reflection
                 </button>
               </div>
-            </div>
-          ) : tasks.length > 0 ? (
-            /* Celebratory Banner when all tasks are complete (Point 11) */
-            <div className="p-3.5 rounded-2xl bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <span className="text-2xl">🎉</span>
+            ) : (
+              <div className="p-4 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-sm font-black text-white">All Tasks Completed Today!</h3>
-                  <p className="text-xs text-emerald-200">Winter Arc discipline maintained. You earned +150 XP today.</p>
+                  <h3 className="text-xs font-bold text-white">No tasks scheduled today</h3>
+                  <p className="text-[11px] text-slate-300">Set your top focus task to unlock today's streak.</p>
                 </div>
+                <button
+                  onClick={onOpenTaskModal}
+                  className="px-3 py-1.5 rounded-xl bg-[#1867FF] hover:bg-[#1055E8] text-white text-xs font-extrabold flex items-center gap-1 transition-all shadow-sm cursor-pointer shrink-0"
+                  type="button"
+                >
+                  <Plus size={13} strokeWidth={2.6} />
+                  <span>Add Task</span>
+                </button>
               </div>
-              <button
-                onClick={onOpenJournalModal}
-                className="px-3 py-1.5 rounded-xl bg-white text-slate-900 text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
-                type="button"
-              >
-                Log Reflection
-              </button>
-            </div>
-          ) : null}
-
-          {/* Quick Action Chips (Point 12: Quick Actions) */}
-          <div className="pt-2 border-t border-white/10 flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <button
-              onClick={onOpenTaskModal}
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
-              type="button"
-            >
-              <Plus size={13} strokeWidth={2.6} />
-              <span>Quick Task</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setEditingRoutine(null);
-                setIsRoutineModalOpen(true);
-              }}
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
-              type="button"
-            >
-              <Sparkles size={13} />
-              <span>Add Routine</span>
-            </button>
-
-            <button
-              onClick={() => startFocusSession('Winter Arc Deep Work')}
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
-              type="button"
-            >
-              <Play size={12} className="fill-white" />
-              <span>25m Focus</span>
-            </button>
-
-            <button
-              onClick={onOpenJournalModal}
-              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
-              type="button"
-            >
-              <BookOpen size={13} />
-              <span>Daily Note</span>
-            </button>
+            )}
           </div>
         </div>
       </section>
