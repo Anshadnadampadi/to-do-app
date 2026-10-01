@@ -346,6 +346,52 @@ export const AppProvider = ({ children }) => {
     return () => { isMounted = false; };
   }, []);
 
+  // Real-time Cloud Sync: Auto-refresh tasks whenever user focuses or returns to tab (mobile/desktop sync)
+  const refreshTasksFromCloud = async (showNotification = false) => {
+    try {
+      const res = await api.tasks.getAll();
+      if (res?.success && Array.isArray(res.data)) {
+        const legacyIds = new Set([
+          'task-wireframes', 'task-feedback', 'task-uikit',
+          'task-sprint-review', 'task-dsa-trees', 'task-1',
+          'task-2', 'task-3', 'task-4', 'task-5', 'task-1790404036224'
+        ]);
+        const legacyTitles = new Set([
+          'design wireframes for task',
+          'review user feedback',
+          'finalize ui kit',
+          'development sprint team meeting',
+          'binary tree maximum path sum',
+          'gym'
+        ]);
+        const cleaned = res.data
+          .filter(t => t && !legacyIds.has(t.id) && !legacyIds.has(t._id) && !legacyTitles.has(t.title?.trim().toLowerCase()))
+          .map(t => ({ ...t, id: t._id || t.id }));
+        setTasks(cleaned);
+        if (showNotification) {
+          showToast('Synced with cloud database ☁️');
+        }
+      }
+    } catch {
+      // offline or server unavailable
+    }
+  };
+
+  useEffect(() => {
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === 'visible') {
+        refreshTasksFromCloud(false);
+      }
+    };
+
+    window.addEventListener('focus', handleVisibilityOrFocus);
+    document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+    return () => {
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+    };
+  }, []);
+
   // Toast trigger with auto-enrichment and history tracking
   const showToast = (messageOrObj, type = 'success', options = {}) => {
     let toastPayload;
@@ -1051,6 +1097,7 @@ export const AppProvider = ({ children }) => {
         toggleTaskCompleted,
         toggleTaskReminder,
         requestNotificationPermission,
+        refreshTasksFromCloud,
         routines,
         setRoutines,
         toggleRoutine,

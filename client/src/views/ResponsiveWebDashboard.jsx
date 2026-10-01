@@ -44,6 +44,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
     deleteTask,
     clearAllTasks,
     toggleTaskReminder,
+    refreshTasksFromCloud,
     routines,
     toggleRoutine,
     deleteRoutine,
@@ -581,21 +582,33 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
                   </span>
                 </div>
 
-                {tasks.length > 0 && (
+                <div className="flex items-center gap-1.5 shrink-0">
                   <button
-                    onClick={() => {
-                      if (window.confirm('Clear all tasks and start completely fresh?')) {
-                        clearAllTasks();
-                      }
-                    }}
-                    className="px-2.5 py-1 rounded-full text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
-                    title="Clear all tasks to start fresh"
+                    onClick={() => refreshTasksFromCloud(true)}
+                    className="px-2.5 py-1 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-colors flex items-center gap-1 cursor-pointer"
+                    title="Sync tasks with cloud database"
                     type="button"
                   >
-                    <Trash2 size={12} />
-                    <span>Clear All</span>
+                    <RotateCcw size={12} className="text-[#1867FF]" />
+                    <span>Sync</span>
                   </button>
-                )}
+
+                  {tasks.length > 0 && (
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Clear all tasks and start completely fresh?')) {
+                          clearAllTasks();
+                        }
+                      }}
+                      className="px-2.5 py-1 rounded-full text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 cursor-pointer"
+                      title="Clear all tasks to start fresh"
+                      type="button"
+                    >
+                      <Trash2 size={12} />
+                      <span>Clear All</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Clear Filter Tabs */}
