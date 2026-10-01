@@ -76,6 +76,13 @@ export const api = {
         headers: getAuthHeaders()
       });
       return res.json();
+    },
+    clearAll: async () => {
+      const res = await fetch(`${API_BASE_URL}/tasks`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+      return res.json();
     }
   },
 

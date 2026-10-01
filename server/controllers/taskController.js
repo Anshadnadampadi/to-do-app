@@ -55,7 +55,7 @@ export const createTask = async (req, res, next) => {
       description: description || '',
       time: time || '10:00 AM',
       timeLabel: time || '10:00 AM',
-      date: date || '2025-11-27',
+      date: date || new Date().toISOString().split('T')[0],
       category: category || 'Projects',
       priority: priority || 'High',
       statusBadge: statusBadge || 'In Progress',
@@ -135,3 +135,22 @@ export const deleteTask = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Clear all tasks
+// @route   DELETE /api/tasks
+// @access  Private / Public in dev
+export const clearAllTasks = async (req, res, next) => {
+  try {
+    if (isConnectedToMongo) {
+      await Task.deleteMany({});
+      return res.status(200).json({ success: true, message: 'All tasks cleared' });
+    } else {
+      mockStore.tasks = [];
+      saveStore();
+      return res.status(200).json({ success: true, message: 'All tasks cleared' });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+

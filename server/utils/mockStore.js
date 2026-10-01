@@ -24,59 +24,7 @@ const defaultStore = {
     goalsCompletedCount: 5
   },
 
-  tasks: [
-    {
-      _id: "task-1",
-      id: "task-1",
-      title: "Design Wireframes For Task",
-      time: "10:00 AM",
-      timeEnd: "11:15 AM",
-      timeLabel: "10:00 AM",
-      date: "2025-11-27",
-      category: "Projects",
-      statusBadge: "In Progress",
-      status: "in-progress",
-      priority: "High",
-      progress: 75,
-      members: [{ name: "Anshad", avatar: "/assets/maddox_avatar.jpg" }],
-      joinedExtra: 1,
-      description: "Build clean mobile wireframes and interaction specs in Figma."
-    },
-    {
-      _id: "task-2",
-      id: "task-2",
-      title: "Review User Feedback",
-      time: "11:30 AM",
-      timeEnd: "12:45 PM",
-      timeLabel: "11:30 AM",
-      date: "2025-11-27",
-      category: "Interview Preparation",
-      statusBadge: "Pending",
-      status: "in-progress",
-      priority: "Medium",
-      progress: 40,
-      members: [{ name: "Anshad", avatar: "/assets/maddox_avatar.jpg" }],
-      joinedExtra: 1,
-      description: "Analyze qualitative UX interview notes and feature sentiment."
-    },
-    {
-      _id: "task-3",
-      id: "task-3",
-      title: "Finalize UI Kit",
-      time: "1:00 PM",
-      timeEnd: "2:30 PM",
-      timeLabel: "1:00 PM",
-      date: "2025-11-27",
-      category: "React",
-      statusBadge: "In Progress",
-      status: "in-progress",
-      priority: "Urgent",
-      progress: 60,
-      members: [{ name: "Anshad", avatar: "/assets/maddox_avatar.jpg" }],
-      joinedExtra: 0,
-      description: "Export design tokens, typography scales, and button component variants."
-    }
-  ],
+  tasks: [],
 
   habits: [
     { _id: "h-1", id: "h-1", name: "Wake Up Early (5:30 AM)", category: "Personal", streak: 14, completedToday: true, history: [true, true, true, true, true, true, true] },

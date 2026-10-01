@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Clock, Plus } from 'lucide-react';
+import { X, Clock, Plus, Calendar as CalendarIcon } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/initialData';
 
@@ -11,6 +11,7 @@ export const TaskModal = ({ isOpen, onClose }) => {
   const [category, setCategory] = useState('Projects');
   const [priority, setPriority] = useState('High');
   const [time, setTime] = useState('10:00 AM');
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [statusBadge, setStatusBadge] = useState('In Progress');
 
   if (!isOpen) return null;
@@ -26,12 +27,14 @@ export const TaskModal = ({ isOpen, onClose }) => {
       priority,
       time,
       timeLabel: time,
+      date: date || new Date().toISOString().split('T')[0],
       statusBadge,
       progress: statusBadge === 'Completed' ? 100 : statusBadge === 'In Progress' ? 60 : 20
     });
 
     setTitle('');
     setDescription('');
+    setDate(new Date().toISOString().split('T')[0]);
     onClose();
   };
 
@@ -56,7 +59,7 @@ export const TaskModal = ({ isOpen, onClose }) => {
             </label>
             <input
               type="text"
-              placeholder="e.g. Design Wireframes For Task"
+              placeholder="e.g. Morning gym workout, LeetCode Trees..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition-all"
@@ -72,33 +75,34 @@ export const TaskModal = ({ isOpen, onClose }) => {
             </label>
             <input
               type="text"
-              placeholder="Key deliverable details"
+              placeholder="Key deliverable details or subtasks"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition-all"
             />
           </div>
 
-          {/* Status & Time */}
+          {/* Date & Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Status Badge
+                Date
               </label>
-              <select
-                value={statusBadge}
-                onChange={(e) => setStatusBadge(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none"
-              >
-                <option value="In Progress">In Progress (Mint)</option>
-                <option value="Pending">Pending (Amber)</option>
-                <option value="Completed">Completed (Blue)</option>
-              </select>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl pl-8 pr-2.5 py-2 text-xs text-slate-800 focus:outline-none"
+                  required
+                />
+                <CalendarIcon size={13} className="absolute left-2.5 top-3 text-slate-400 pointer-events-none" />
+              </div>
             </div>
 
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Time Node
+                Time
               </label>
               <div className="relative">
                 <input
@@ -108,9 +112,25 @@ export const TaskModal = ({ isOpen, onClose }) => {
                   onChange={(e) => setTime(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-800 focus:outline-none"
                 />
-                <Clock size={13} className="absolute left-2.5 top-3 text-slate-400" />
+                <Clock size={13} className="absolute left-2.5 top-3 text-slate-400 pointer-events-none" />
               </div>
             </div>
+          </div>
+
+          {/* Status Badge */}
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-1">
+              Status Badge
+            </label>
+            <select
+              value={statusBadge}
+              onChange={(e) => setStatusBadge(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#1867FF] focus:ring-2 focus:ring-[#1867FF]/15 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none"
+            >
+              <option value="In Progress">In Progress (Mint)</option>
+              <option value="Pending">Pending (Amber)</option>
+              <option value="Completed">Completed (Blue)</option>
+            </select>
           </div>
 
           {/* Category & Priority */}

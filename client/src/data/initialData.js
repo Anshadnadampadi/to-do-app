@@ -12,7 +12,7 @@ export const INITIAL_USER = {
   avatar: "/assets/maddox_avatar.jpg",
   streak: 14,
   todayDateDisplay: TODAY_FORMATTED,
-  todayMeetingsCount: 2,
+  todayMeetingsCount: 0,
   weeklyProductivity: 92,
   monthlyProductivity: 88,
   totalStudyHours: 152,
@@ -34,103 +34,8 @@ export const INITIAL_ROUTINE_BOX = [
   { id: "routine-8", title: "Make Breakfast", iconName: "Utensils", category: "Personal", time: "10:00 AM", isCompleted: true }
 ];
 
-// Timeline Tasks (Screen 3 from design screenshot)
-export const INITIAL_TASKS = [
-  {
-    id: "task-wireframes",
-    title: "Design Wireframes For Task",
-    time: "10:00 AM",
-    timeEnd: "11:15 AM",
-    timeLabel: "10:00 AM",
-    date: TODAY_ISO,
-    category: "Projects",
-    statusBadge: "In Progress", // "In Progress" | "Pending" | "Completed"
-    status: "in-progress",
-    priority: "High",
-    progress: 75,
-    members: [
-      { name: "Anshad", avatar: "/assets/maddox_avatar.jpg" },
-      { name: "Sarah Chen", avatar: "/avatars/avatar_sarah.jpg" }
-    ],
-    joinedExtra: 1,
-    description: "Build clean mobile wireframes and interaction specs in Figma."
-  },
-  {
-    id: "task-feedback",
-    title: "Review User Feedback",
-    time: "11:30 AM",
-    timeEnd: "12:45 PM",
-    timeLabel: "11:30 AM",
-    date: TODAY_ISO,
-    category: "Interview Preparation",
-    statusBadge: "Pending",
-    status: "in-progress",
-    priority: "Medium",
-    progress: 40,
-    members: [
-      { name: "Marcus Lee", avatar: "/avatars/avatar_marcus.jpg" },
-      { name: "Anshad", avatar: "/assets/maddox_avatar.jpg" }
-    ],
-    joinedExtra: 1,
-    description: "Analyze qualitative UX interview notes and feature sentiment."
-  },
-  {
-    id: "task-uikit",
-    title: "Finalize UI Kit",
-    time: "1:00 PM",
-    timeEnd: "2:30 PM",
-    timeLabel: "1:00 PM",
-    date: TODAY_ISO,
-    category: "React",
-    statusBadge: "In Progress",
-    status: "in-progress",
-    priority: "Urgent",
-    progress: 60,
-    members: [
-      { name: "Sarah Chen", avatar: "/avatars/avatar_sarah.jpg" }
-    ],
-    joinedExtra: 0,
-    description: "Export design tokens, typography scales, and button component variants."
-  },
-  {
-    id: "task-sprint-review",
-    title: "Development Sprint Team Meeting",
-    time: "3:30 PM",
-    timeEnd: "4:30 PM",
-    timeLabel: "3:30 PM",
-    date: TODAY_ISO,
-    category: "Projects",
-    statusBadge: "Completed",
-    status: "completed",
-    priority: "High",
-    progress: 100,
-    members: [
-      { name: "Anshad", avatar: "/assets/maddox_avatar.jpg" },
-      { name: "Sarah Chen", avatar: "/avatars/avatar_sarah.jpg" },
-      { name: "Marcus Lee", avatar: "/avatars/avatar_marcus.jpg" }
-    ],
-    joinedExtra: 3,
-    description: "Review sprint deliverables and AI feature integrations."
-  },
-  {
-    id: "task-dsa-trees",
-    title: "Binary Tree Maximum Path Sum",
-    time: "5:00 PM",
-    timeEnd: "6:00 PM",
-    timeLabel: "5:00 PM",
-    date: TODAY_ISO,
-    category: "DSA",
-    statusBadge: "In Progress",
-    status: "in-progress",
-    priority: "High",
-    progress: 80,
-    members: [
-      { name: "Anshad", avatar: "/assets/maddox_avatar.jpg" }
-    ],
-    joinedExtra: 0,
-    description: "LeetCode #124 post-order DFS traversal practice."
-  }
-];
+// Timeline Tasks (Starts empty so you can add your tasks from scratch)
+export const INITIAL_TASKS = [];
 
 // Event Logs (Screen 2 from design screenshot)
 export const INITIAL_EVENT_LOGS = [

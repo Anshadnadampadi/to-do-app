@@ -102,7 +102,7 @@ export const ScreenTodayTasks = ({ onNavigateToSchedule, onOpenTaskModal }) => {
           </span>
         </h1>
         <p className="mt-1 text-xs text-slate-400 font-medium">
-          May 22 you have <span className="text-white font-semibold">{user.todayMeetingsCount} meetings</span>
+          {user?.todayDateDisplay || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • You have <span className="text-white font-semibold">{user.todayMeetingsCount || 0} meetings</span> & {tasks.length} tasks scheduled today
         </p>
       </div>
 
@@ -275,9 +275,20 @@ export const ScreenTodayTasks = ({ onNavigateToSchedule, onOpenTaskModal }) => {
           <span className="text-[11px] text-slate-400">Tap checkbox to mark done</span>
         </div>
 
-        {filteredTasks
-          .filter(t => !t.isHero)
-          .map((task) => {
+        {filteredTasks.length === 0 ? (
+          <div className="py-8 px-4 rounded-2xl bg-[#151824]/60 border border-white/10 text-center flex flex-col items-center">
+            <p className="text-xs text-slate-400">No tasks for today. Start fresh and add your first task!</p>
+            <button
+              onClick={onOpenTaskModal}
+              className="mt-3 px-4 py-1.5 rounded-full bg-[#d7fe03] text-black text-xs font-bold hover:brightness-110 transition-all cursor-pointer"
+            >
+              + Add Task
+            </button>
+          </div>
+        ) : (
+          filteredTasks
+            .filter(t => !t.isHero)
+            .map((task) => {
             const isDone = task.status === 'completed';
 
             return (

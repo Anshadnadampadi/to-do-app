@@ -59,7 +59,30 @@ export const AppProvider = ({ children }) => {
         : loaded.todayDateDisplay
     };
   });
-  const [tasks, setTasks] = useState(() => loadState('tasks', INITIAL_TASKS));
+
+  const [tasks, setTasks] = useState(() => {
+    const loaded = loadState('tasks', INITIAL_TASKS);
+    const legacyIds = new Set([
+      'task-wireframes', 'task-feedback', 'task-uikit',
+      'task-sprint-review', 'task-dsa-trees', 'task-1',
+      'task-2', 'task-3', 'task-4', 'task-5', 'task-1790404036224'
+    ]);
+    const legacyTitles = new Set([
+      'design wireframes for task',
+      'review user feedback',
+      'finalize ui kit',
+      'development sprint team meeting',
+      'binary tree maximum path sum',
+      'gym'
+    ]);
+    if (!Array.isArray(loaded)) return [];
+    return loaded.filter(t => {
+      if (!t) return false;
+      if (legacyIds.has(t.id) || legacyIds.has(t._id)) return false;
+      if (t.title && legacyTitles.has(t.title.trim().toLowerCase())) return false;
+      return true;
+    });
+  });
   const [habits, setHabits] = useState(() => loadState('habits', INITIAL_HABITS));
   const [goals, setGoals] = useState(() => loadState('goals', INITIAL_GOALS));
   const [dsa, setDsa] = useState(() => loadState('dsa', INITIAL_DSA));
@@ -250,8 +273,24 @@ export const AppProvider = ({ children }) => {
 
         if (!isMounted) return;
 
-        if (tasksRes.status === 'fulfilled' && tasksRes.value?.success && Array.isArray(tasksRes.value.data) && tasksRes.value.data.length) {
-          setTasks(tasksRes.value.data.map(t => ({ ...t, id: t._id || t.id })));
+        if (tasksRes.status === 'fulfilled' && tasksRes.value?.success && Array.isArray(tasksRes.value.data)) {
+          const legacyIds = new Set([
+            'task-wireframes', 'task-feedback', 'task-uikit',
+            'task-sprint-review', 'task-dsa-trees', 'task-1',
+            'task-2', 'task-3', 'task-4', 'task-5', 'task-1790404036224'
+          ]);
+          const legacyTitles = new Set([
+            'design wireframes for task',
+            'review user feedback',
+            'finalize ui kit',
+            'development sprint team meeting',
+            'binary tree maximum path sum',
+            'gym'
+          ]);
+          const cleaned = tasksRes.value.data
+            .filter(t => t && !legacyIds.has(t.id) && !legacyIds.has(t._id) && !legacyTitles.has(t.title?.trim().toLowerCase()))
+            .map(t => ({ ...t, id: t._id || t.id }));
+          setTasks(cleaned);
         }
         if (habitsRes.status === 'fulfilled' && habitsRes.value?.success && Array.isArray(habitsRes.value.data) && habitsRes.value.data.length) {
           setHabits(habitsRes.value.data.map(h => ({ ...h, id: h._id || h.id })));
@@ -389,20 +428,21 @@ export const AppProvider = ({ children }) => {
 
   // Task Actions (Full-Stack Synchronized)
   const addTask = (newTask) => {
+    const todayIso = new Date().toISOString().split('T')[0];
     const taskObj = {
       id: `task-${Date.now()}`,
       title: newTask.title || 'Untitled Task',
       time: newTask.time || '10:00 AM',
       timeLabel: newTask.time || '10:00 AM',
-      date: new Date().toISOString().split('T')[0],
+      date: newTask.date || todayIso,
       category: newTask.category || 'Projects',
       priority: newTask.priority || 'High',
       statusBadge: newTask.statusBadge || 'In Progress',
       status: newTask.statusBadge === 'Completed' ? 'completed' : 'in-progress',
-      progress: newTask.progress || 50,
+      progress: newTask.progress !== undefined ? newTask.progress : (newTask.statusBadge === 'Completed' ? 100 : 50),
       description: newTask.description || '',
-      members: [{ name: user.name, avatar: user.avatar }],
-      joinedExtra: 1
+      members: [{ name: user?.name || 'User', avatar: user?.avatar || '/assets/maddox_avatar.jpg' }],
+      joinedExtra: 0
     };
 
     setTasks(prev => [taskObj, ...prev]);
@@ -486,6 +526,13 @@ export const AppProvider = ({ children }) => {
 
     // Sync to Express & MongoDB API
     api.tasks.delete(id).catch(err => console.warn('[API Sync] Task delete cached locally:', err.message));
+  };
+
+  const clearAllTasks = () => {
+    setTasks([]);
+    localStorage.removeItem('winter_arc_tasks');
+    showToast('All tasks cleared. Ready to start from scratch! 🎯');
+    api.tasks.clearAll().catch(err => console.warn('[API Sync] Tasks clear cached locally:', err.message));
   };
 
   // Habit Actions (Full-Stack Synchronized)
@@ -870,6 +917,7 @@ export const AppProvider = ({ children }) => {
         addTask,
         updateTask,
         deleteTask,
+        clearAllTasks,
         toggleTaskCompleted,
         routines,
         setRoutines,

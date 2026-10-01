@@ -41,6 +41,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
     tasks,
     toggleTaskCompleted,
     deleteTask,
+    clearAllTasks,
     routines,
     toggleRoutine,
     deleteRoutine,
@@ -568,13 +569,31 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
           <div className="p-4 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-[0_4px_20px_rgba(24,39,75,0.04)] flex flex-col min-w-0">
             {/* Header: Title & Filter Tabs */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 min-w-0">
-              <div>
-                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
-                  Today's Schedule
-                </h2>
-                <span className="text-xs text-slate-500 font-medium">
-                  {months[activeMonthIndex]} {selectedDayNumber}, {currentYear} • Focus Timeline
-                </span>
+              <div className="flex items-center justify-between sm:justify-start gap-4">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                    {isViewingToday ? "Today's Schedule" : `${months[activeMonthIndex]} ${selectedDayNumber} Schedule`}
+                  </h2>
+                  <span className="text-xs text-slate-500 font-medium">
+                    {months[activeMonthIndex]} {selectedDayNumber}, {activeYear || currentYear} • Focus Timeline
+                  </span>
+                </div>
+
+                {tasks.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Clear all tasks and start completely fresh?')) {
+                        clearAllTasks();
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-full text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                    title="Clear all tasks to start fresh"
+                    type="button"
+                  >
+                    <Trash2 size={12} />
+                    <span>Clear All</span>
+                  </button>
+                )}
               </div>
 
               {/* Clear Filter Tabs */}

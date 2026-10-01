@@ -20,11 +20,8 @@ export const ScreenWorkToday = ({ onOpenTaskModal }) => {
   // Timeline hours matching the design ruler
   const timelineHours = ['7.00', '8.00', '9.00', '10.00', '11.00', '12.00'];
 
-  // Specific timeline tasks from design screenshot
-  const timelineTasks = tasks.filter(t =>
-    ['task-dev-timeline-1', 'task-dashboard-design', 'task-wireframes', 'task-portfolio-design'].includes(t.id) ||
-    t.timeStart !== undefined
-  );
+  // Active tasks for timeline
+  const timelineTasks = tasks;
 
   return (
     <div className="relative flex-1 flex flex-col px-5 pt-1 pb-24 overflow-y-auto select-none bg-gradient-to-b from-[#11131c] via-[#0b0c12] to-[#07080b]">
