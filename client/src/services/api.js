@@ -1,6 +1,6 @@
 // Winter Arc Client API Service Layer
 // Connects React Client to Express & MongoDB Backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5002/api' : '/api');
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5001/api' : '/api');
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('winter_arc_token');

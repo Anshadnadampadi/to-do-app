@@ -29,7 +29,7 @@ const taskSchema = new mongoose.Schema(
     },
     date: {
       type: String,
-      default: '2025-11-27'
+      default: () => new Date().toISOString().split('T')[0]
     },
     category: {
       type: String,
@@ -75,6 +75,14 @@ const taskSchema = new mongoose.Schema(
       }
     ],
     joinedExtra: {
+      type: Number,
+      default: 0
+    },
+    reminder: {
+      type: Boolean,
+      default: false
+    },
+    reminderMinutesBefore: {
       type: Number,
       default: 0
     }

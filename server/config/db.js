@@ -3,10 +3,15 @@ import mongoose from 'mongoose';
 export let isConnectedToMongo = false;
 
 export const connectDB = async () => {
+  if (mongoose.connection && mongoose.connection.readyState >= 1) {
+    isConnectedToMongo = true;
+    return;
+  }
+
   const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/winter-arc';
   try {
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000
+      serverSelectionTimeoutMS: 5000
     });
     isConnectedToMongo = true;
     console.log(`[MongoDB] Connected: ${conn.connection.host}`);
