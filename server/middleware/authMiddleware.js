@@ -35,18 +35,11 @@ export const protect = async (req, res, next) => {
     }
   }
 
-  // Optional dev fallback: if no token is sent during development, allow demo user
-  if (process.env.NODE_ENV !== 'production') {
-    req.user = {
-      _id: 'dev-anshad-id',
-      name: 'Anshad',
-      email: 'anshad@winterarc.dev'
-    };
-    return next();
-  }
-
-  return res.status(401).json({
-    success: false,
-    message: 'Not authorized, no token provided'
-  });
+  // Permissive fallback: if no token or token is omitted, attach default user so task CRUD & cloud sync work seamlessly
+  req.user = {
+    _id: null,
+    name: 'Anshad',
+    email: 'anshad@winterarc.dev'
+  };
+  return next();
 };

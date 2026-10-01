@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const taskSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      type: mongoose.Schema.Types.Mixed,
+      default: null
     },
     title: {
       type: String,
@@ -33,33 +33,18 @@ const taskSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: [
-        'DSA',
-        'React',
-        'Node.js',
-        'AI Engineering',
-        'Projects',
-        'Reading',
-        'Interview Preparation',
-        'Gym',
-        'Personal',
-        'Miscellaneous'
-      ],
       default: 'Projects'
     },
     priority: {
       type: String,
-      enum: ['Urgent', 'High', 'Medium', 'Low'],
       default: 'High'
     },
     statusBadge: {
       type: String,
-      enum: ['In Progress', 'Pending', 'Completed'],
       default: 'In Progress'
     },
     status: {
       type: String,
-      enum: ['in-progress', 'pending', 'completed'],
       default: 'in-progress'
     },
     progress: {

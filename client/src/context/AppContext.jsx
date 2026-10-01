@@ -314,7 +314,31 @@ export const AppProvider = ({ children }) => {
           const cleaned = tasksRes.value.data
             .filter(t => t && !legacyIds.has(t.id) && !legacyIds.has(t._id) && !legacyTitles.has(t.title?.trim().toLowerCase()))
             .map(t => ({ ...t, id: t._id || t.id }));
-          setTasks(cleaned);
+
+          if (cleaned.length > 0) {
+            setTasks(current => {
+              const serverIds = new Set(cleaned.map(t => t.id || t._id));
+              const localOnly = (current || []).filter(t => t && !serverIds.has(t.id) && !serverIds.has(t._id));
+              // Push any unsynced local tasks to cloud database in background
+              localOnly.forEach(t => {
+                api.tasks.create(t).catch(() => {});
+              });
+              const merged = [...localOnly, ...cleaned];
+              localStorage.setItem('winter_arc_tasks', JSON.stringify(merged));
+              return merged;
+            });
+          } else {
+            // Server returned empty list: do NOT erase user's local tasks! Push local tasks up to database instead
+            setTasks(current => {
+              if (current && current.length > 0) {
+                current.forEach(t => {
+                  api.tasks.create(t).catch(() => {});
+                });
+                return current;
+              }
+              return [];
+            });
+          }
         }
         if (habitsRes.status === 'fulfilled' && habitsRes.value?.success && Array.isArray(habitsRes.value.data) && habitsRes.value.data.length) {
           setHabits(habitsRes.value.data.map(h => ({ ...h, id: h._id || h.id })));
@@ -367,7 +391,15 @@ export const AppProvider = ({ children }) => {
         const cleaned = res.data
           .filter(t => t && !legacyIds.has(t.id) && !legacyIds.has(t._id) && !legacyTitles.has(t.title?.trim().toLowerCase()))
           .map(t => ({ ...t, id: t._id || t.id }));
-        setTasks(cleaned);
+        if (cleaned.length > 0) {
+          setTasks(current => {
+            const serverIds = new Set(cleaned.map(t => t.id || t._id));
+            const localOnly = (current || []).filter(t => t && !serverIds.has(t.id) && !serverIds.has(t._id));
+            const merged = [...localOnly, ...cleaned];
+            localStorage.setItem('winter_arc_tasks', JSON.stringify(merged));
+            return merged;
+          });
+        }
         if (showNotification) {
           showToast('Synced with cloud database ☁️');
         }
@@ -522,16 +554,30 @@ export const AppProvider = ({ children }) => {
       requestNotificationPermission();
     }
 
-    setTasks(prev => [taskObj, ...prev]);
+    setTasks(prev => {
+      const nextTasks = [taskObj, ...prev];
+      try {
+        localStorage.setItem('winter_arc_tasks', JSON.stringify(nextTasks));
+      } catch (err) {
+        console.warn('LocalStorage error:', err);
+      }
+      return nextTasks;
+    });
     showToast(`Task "${taskObj.title}" created!`);
     triggerCelebration();
 
     // Sync to Express & MongoDB API
     api.tasks.create(taskObj).then(res => {
       if (res?.success && res.data) {
-        setTasks(current =>
-          current.map(t => (t.id === taskObj.id ? { ...t, ...res.data, id: res.data._id || res.data.id || t.id } : t))
-        );
+        setTasks(current => {
+          const updated = current.map(t => (t.id === taskObj.id ? { ...t, ...res.data, id: res.data._id || res.data.id || t.id } : t));
+          try {
+            localStorage.setItem('winter_arc_tasks', JSON.stringify(updated));
+          } catch (err) {
+            console.warn('LocalStorage error:', err);
+          }
+          return updated;
+        });
       }
     }).catch(err => console.warn('[API Sync] Task create cached locally:', err.message));
   };

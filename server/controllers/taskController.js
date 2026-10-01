@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Task } from '../models/Task.js';
 import { isConnectedToMongo } from '../config/db.js';
 import { mockStore, saveStore } from '../utils/mockStore.js';
@@ -41,10 +42,22 @@ export const getTasks = async (req, res, next) => {
 
 // @desc    Create a new task
 // @route   POST /api/tasks
-// @access  Private
+// @access  Private / Public
 export const createTask = async (req, res, next) => {
   try {
-    const { title, description, time, date, category, priority, statusBadge, progress } = req.body;
+    const {
+      title,
+      description,
+      time,
+      timeEnd,
+      date,
+      category,
+      priority,
+      statusBadge,
+      progress,
+      reminder,
+      reminderMinutesBefore
+    } = req.body;
 
     if (!title) {
       return res.status(400).json({ success: false, message: 'Please provide task title' });
@@ -54,27 +67,32 @@ export const createTask = async (req, res, next) => {
       title,
       description: description || '',
       time: time || '10:00 AM',
+      timeEnd: timeEnd || '11:15 AM',
       timeLabel: time || '10:00 AM',
       date: date || new Date().toISOString().split('T')[0],
       category: category || 'Projects',
       priority: priority || 'High',
       statusBadge: statusBadge || 'In Progress',
       status: statusBadge === 'Completed' ? 'completed' : 'in-progress',
-      progress: progress || 50,
+      progress: progress !== undefined ? Number(progress) : 50,
+      reminder: Boolean(reminder),
+      reminderMinutesBefore: Number(reminderMinutesBefore || 0),
       members: [{ name: 'Anshad', avatar: '/assets/maddox_avatar.jpg' }],
-      joinedExtra: 1
+      joinedExtra: 0
     };
 
     if (isConnectedToMongo) {
+      const validUserId = (req.user?._id && mongoose.isValidObjectId(req.user._id)) ? req.user._id : null;
       const task = await Task.create({
         ...taskData,
-        user: req.user?._id
+        user: validUserId
       });
       return res.status(201).json({ success: true, data: task });
     } else {
+      const newId = req.body.id || `task-${Date.now()}`;
       const newTask = {
-        _id: `task-${Date.now()}`,
-        id: `task-${Date.now()}`,
+        _id: newId,
+        id: newId,
         ...taskData
       };
       mockStore.tasks.unshift(newTask);
