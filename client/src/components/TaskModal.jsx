@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Clock, Plus, Calendar as CalendarIcon } from 'lucide-react';
+import { X, Clock, Plus, Calendar as CalendarIcon, Bell } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/initialData';
 
@@ -13,6 +13,8 @@ export const TaskModal = ({ isOpen, onClose }) => {
   const [time, setTime] = useState('10:00 AM');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [statusBadge, setStatusBadge] = useState('In Progress');
+  const [hasReminder, setHasReminder] = useState(false);
+  const [reminderMinutesBefore, setReminderMinutesBefore] = useState(0);
 
   if (!isOpen) return null;
 
@@ -29,12 +31,16 @@ export const TaskModal = ({ isOpen, onClose }) => {
       timeLabel: time,
       date: date || new Date().toISOString().split('T')[0],
       statusBadge,
-      progress: statusBadge === 'Completed' ? 100 : statusBadge === 'In Progress' ? 60 : 20
+      progress: statusBadge === 'Completed' ? 100 : statusBadge === 'In Progress' ? 60 : 20,
+      reminder: hasReminder,
+      reminderMinutesBefore: hasReminder ? Number(reminderMinutesBefore) : 0
     });
 
     setTitle('');
     setDescription('');
     setDate(new Date().toISOString().split('T')[0]);
+    setHasReminder(false);
+    setReminderMinutesBefore(0);
     onClose();
   };
 
@@ -165,6 +171,47 @@ export const TaskModal = ({ isOpen, onClose }) => {
                 <option value="Urgent">Urgent</option>
               </select>
             </div>
+          </div>
+
+          {/* Reminder Section */}
+          <div className="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <label htmlFor="task-reminder-toggle" className="flex items-center gap-2.5 cursor-pointer select-none">
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${hasReminder ? 'bg-purple-600 text-white shadow-xs' : 'bg-purple-100 text-purple-600'}`}>
+                  <Bell size={16} className={hasReminder ? 'fill-white' : ''} />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Set Reminder</span>
+                  <span className="text-[10px] text-slate-500">Audio chime & desktop alert</span>
+                </div>
+              </label>
+
+              <input
+                id="task-reminder-toggle"
+                type="checkbox"
+                checked={hasReminder}
+                onChange={(e) => setHasReminder(e.target.checked)}
+                className="w-4 h-4 accent-purple-600 rounded cursor-pointer"
+              />
+            </div>
+
+            {hasReminder && (
+              <div className="pt-2 border-t border-purple-100 flex items-center justify-between gap-2">
+                <span className="text-[11px] font-semibold text-slate-600">Notify:</span>
+                <select
+                  value={reminderMinutesBefore}
+                  onChange={(e) => setReminderMinutesBefore(Number(e.target.value))}
+                  className="bg-white border border-purple-200 focus:border-purple-600 rounded-lg px-2.5 py-1 text-xs text-slate-800 font-semibold focus:outline-none"
+                >
+                  <option value={0}>At time of task ({time || '10:00 AM'})</option>
+                  <option value={5}>5 minutes before</option>
+                  <option value={10}>10 minutes before</option>
+                  <option value={15}>15 minutes before</option>
+                  <option value={30}>30 minutes before</option>
+                  <option value={60}>1 hour before</option>
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Submit buttons */}

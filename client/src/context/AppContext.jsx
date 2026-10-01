@@ -20,6 +20,30 @@ import { calculateLevel, XP_REWARDS } from '../utils/gamification';
 
 const AppContext = createContext(null);
 
+export const parseTaskDateTime = (dateStr, timeStr) => {
+  if (!dateStr || !timeStr) return null;
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return null;
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+
+    const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?$/i);
+    if (!match) return null;
+    let hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const modifier = match[3] ? match[3].toUpperCase() : null;
+
+    if (modifier === 'PM' && hours < 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+
+    return new Date(year, month - 1, day, hours, minutes, 0, 0);
+  } catch {
+    return null;
+  }
+};
+
 export const AppProvider = ({ children }) => {
   const currentYear = new Date().getFullYear();
 
@@ -441,9 +465,16 @@ export const AppProvider = ({ children }) => {
       status: newTask.statusBadge === 'Completed' ? 'completed' : 'in-progress',
       progress: newTask.progress !== undefined ? newTask.progress : (newTask.statusBadge === 'Completed' ? 100 : 50),
       description: newTask.description || '',
+      reminder: Boolean(newTask.reminder),
+      reminderMinutesBefore: Number(newTask.reminderMinutesBefore) || 0,
+      reminderTriggered: false,
       members: [{ name: user?.name || 'User', avatar: user?.avatar || '/assets/maddox_avatar.jpg' }],
       joinedExtra: 0
     };
+
+    if (newTask.reminder) {
+      requestNotificationPermission();
+    }
 
     setTasks(prev => [taskObj, ...prev]);
     showToast(`Task "${taskObj.title}" created!`);
@@ -534,6 +565,105 @@ export const AppProvider = ({ children }) => {
     showToast('All tasks cleared. Ready to start from scratch! 🎯');
     api.tasks.clearAll().catch(err => console.warn('[API Sync] Tasks clear cached locally:', err.message));
   };
+
+  // Native Browser Notification Permission Request
+  const requestNotificationPermission = async () => {
+    if (typeof window === 'undefined' || !('Notification' in window)) return 'unsupported';
+    if (Notification.permission === 'granted') return 'granted';
+    try {
+      const permission = await Notification.requestPermission();
+      return permission;
+    } catch {
+      return Notification.permission;
+    }
+  };
+
+  // Toggle Reminder on a task
+  const toggleTaskReminder = async (taskId, reminderMinutesBefore = 0) => {
+    const target = tasks.find(t => t.id === taskId);
+    if (!target) return;
+    const nextReminder = !target.reminder;
+
+    if (nextReminder) {
+      await requestNotificationPermission();
+    }
+
+    updateTask(taskId, {
+      reminder: nextReminder,
+      reminderMinutesBefore: nextReminder ? reminderMinutesBefore : 0,
+      reminderTriggered: false
+    });
+
+    if (nextReminder) {
+      showToast({
+        title: 'REMINDER SET 🔔',
+        message: `Reminder active for "${target.title}" (${target.time})`,
+        type: 'reminder'
+      });
+    } else {
+      showToast(`Reminder turned off for "${target.title}"`);
+    }
+  };
+
+  // Background Reminder Checker (polls every 15 seconds)
+  useEffect(() => {
+    const checkReminders = () => {
+      const now = Date.now();
+
+      tasks.forEach(task => {
+        if (!task.reminder || task.status === 'completed' || task.reminderTriggered) return;
+
+        const targetDate = parseTaskDateTime(task.date, task.time);
+        if (!targetDate) return;
+
+        const minutesBefore = Number(task.reminderMinutesBefore) || 0;
+        const triggerTimeMs = targetDate.getTime() - (minutesBefore * 60 * 1000);
+
+        // Fire if current time reached trigger time and is within 15 minutes window
+        if (now >= triggerTimeMs && (now - triggerTimeMs) < 15 * 60 * 1000) {
+          // In-App Toast
+          showToast({
+            title: 'TASK REMINDER ⏰',
+            message: `${task.title} is scheduled for ${task.time}!`,
+            type: 'reminder',
+            duration: 6000
+          });
+
+          // Native Desktop Notification
+          if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+            try {
+              new Notification(`⏰ Task Reminder: ${task.title}`, {
+                body: `${task.time} • ${task.category || 'Winter Arc'}${task.description ? `\n${task.description}` : ''}`,
+                icon: '/favicon.ico'
+              });
+            } catch {
+              // Ignore if notification fails
+            }
+          }
+
+          // Add to Notification Center
+          setNotificationsHistory(prev => [
+            {
+              id: `remind-${task.id}-${Date.now()}`,
+              title: 'TASK REMINDER ⏰',
+              message: `${task.title} scheduled for ${task.time}`,
+              type: 'reminder',
+              timestamp: Date.now()
+            },
+            ...prev
+          ]);
+          setUnreadNotificationsCount(c => c + 1);
+
+          // Mark triggered
+          updateTask(task.id, { reminderTriggered: true });
+        }
+      });
+    };
+
+    checkReminders();
+    const interval = setInterval(checkReminders, 15000);
+    return () => clearInterval(interval);
+  }, [tasks]);
 
   // Habit Actions (Full-Stack Synchronized)
   const toggleHabitToday = (id) => {
@@ -919,6 +1049,8 @@ export const AppProvider = ({ children }) => {
         deleteTask,
         clearAllTasks,
         toggleTaskCompleted,
+        toggleTaskReminder,
+        requestNotificationPermission,
         routines,
         setRoutines,
         toggleRoutine,

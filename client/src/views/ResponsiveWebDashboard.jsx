@@ -28,7 +28,8 @@ import {
   Target,
   Trophy,
   Filter,
-  AlertCircle
+  AlertCircle,
+  Bell
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { AvatarStack } from '../components/AvatarStack';
@@ -42,6 +43,7 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
     toggleTaskCompleted,
     deleteTask,
     clearAllTasks,
+    toggleTaskReminder,
     routines,
     toggleRoutine,
     deleteRoutine,
@@ -743,6 +745,23 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
                               <span className="badge-in-progress hidden sm:inline-flex">In Progress</span>
                             )}
 
+                            {/* Reminder Badge / Quick Toggle */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleTaskReminder(task.id);
+                              }}
+                              className={`p-1.5 rounded-lg transition-all border-none cursor-pointer ${
+                                task.reminder
+                                  ? 'text-purple-600 bg-purple-50 hover:bg-purple-100 ring-1 ring-purple-200'
+                                  : 'text-slate-300 hover:text-purple-600 hover:bg-purple-50'
+                              }`}
+                              title={task.reminder ? `Reminder active (${task.reminderMinutesBefore ? `${task.reminderMinutesBefore}m before` : 'at task time'}). Click to turn off.` : "Click to set a reminder"}
+                              type="button"
+                            >
+                              <Bell size={15} className={task.reminder ? "fill-purple-600" : ""} />
+                            </button>
+
                             {/* 3-dots Task Options Button (Safe, replaces dangerous delete icon - Point 7) */}
                             <button
                               onClick={(e) => handleOpenTaskMenu(e, task)}
@@ -1285,6 +1304,19 @@ export const ResponsiveWebDashboard = ({ onOpenTaskModal, onOpenJournalModal }) 
             >
               <Play size={14} className="text-[#1867FF] fill-[#1867FF] shrink-0" />
               <span>Start 25m Focus</span>
+            </button>
+
+            <button
+              onClick={() => {
+                toggleTaskReminder(activeMenuTask.id);
+                setActiveMenuTask(null);
+                setTaskMenuPosition(null);
+              }}
+              className="routine-actions-item"
+              type="button"
+            >
+              <Bell size={14} className={activeMenuTask.reminder ? "text-purple-600 fill-purple-600 shrink-0" : "text-slate-500 shrink-0"} />
+              <span>{activeMenuTask.reminder ? "Turn Off Reminder" : "Set Reminder (Alarm)"}</span>
             </button>
 
             <div className="h-px bg-slate-100 my-1" />

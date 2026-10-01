@@ -9,6 +9,7 @@ import {
   BookOpen,
   Target,
   Trophy,
+  BellRing,
   X
 } from 'lucide-react';
 
@@ -34,6 +35,15 @@ const playNotificationChime = (type = 'success') => {
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
       osc.start(now);
       osc.stop(now + 0.35);
+    } else if (type === 'reminder') {
+      // Harmonic alert chime for reminders
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(659.25, now); // E5
+      osc.frequency.setValueAtTime(880, now + 0.12); // A5
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+      osc.start(now);
+      osc.stop(now + 0.5);
     } else if (type === 'error') {
       // Soft gentle warning
       osc.type = 'triangle';
@@ -96,6 +106,9 @@ export const parseNotificationData = (toast) => {
   } else if (lower.includes('habit') || lower.includes('streak')) {
     type = 'streak';
     if (!title) title = 'STREAK ADVANCED 🔥';
+  } else if (type === 'reminder' || lower.includes('reminder') || lower.includes('alarm')) {
+    type = 'reminder';
+    if (!title) title = 'TASK REMINDER ⏰';
   } else if (lower.includes('task')) {
     type = 'task';
     if (!title) {
@@ -233,6 +246,12 @@ export const NotificationToast = ({ toast, onDismiss }) => {
       gradient: 'linear-gradient(135deg, #8B5CF6, #6366F1)',
       color: '#7C3AED',
       progressGradient: 'linear-gradient(90deg, #8B5CF6, #A78BFA)'
+    },
+    reminder: {
+      icon: <BellRing size={18} className="text-white animate-bounce" />,
+      gradient: 'linear-gradient(135deg, #EC4899, #8B5CF6)',
+      color: '#DB2777',
+      progressGradient: 'linear-gradient(90deg, #EC4899, #F472B6)'
     },
     error: {
       icon: <AlertCircle size={18} className="text-white" />,
